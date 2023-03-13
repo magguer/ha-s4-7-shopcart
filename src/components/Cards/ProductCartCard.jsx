@@ -1,7 +1,7 @@
 function ProductCartCard({ product }) {
   return (
     <>
-      <div className="flex justify-between  p-2 w-full bg-white hover:bg-red-100 border rounded items-center hover:scale-[105%] transition-all duration-150 cursor-pointer">
+      <div className="flex justify-between  p-2 w-full bg-white hover:bg-red-100 border rounded items-center hover:scale-[101%] transition-all duration-150 cursor-pointer">
         <div className="flex gap-2">
           <img
             className="w-5 mix-blend-multiply object-contain"

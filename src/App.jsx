@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [productosCarrito, setProductosCarrito] = useState([]);
+  const [showCart, setShowCart] = useState(false);
   let carrito = [...productosCarrito];
 
   // Toast FX
@@ -24,6 +25,7 @@ function App() {
       theme: "light",
     });
   };
+
   const addProductToast = () => {
     return toast("Producto agregado al carrito.", {
       position: "bottom-right",
@@ -53,14 +55,20 @@ function App() {
         return noMoreProductToast();
       } else {
         // Si no sucede, le sumamos a nuestro producto un +1 a su clave "count"
-        const newCart = productosCarrito.map((item) => {
+        carrito = productosCarrito.map((item) => {
           if (item.id === product.id) {
             return { ...item, count: item.count + 1 };
           } else {
             return item;
           }
         });
-        setProductosCarrito(newCart);
+        setProductosCarrito(carrito);
+        // Calculo Total Carrito
+        let total = 0;
+        carrito.map((singleProduct) => {
+          total += singleProduct.unitPrice * singleProduct.count;
+        });
+        setTotalPrice(total);
       }
     } else {
       // En caso de no existir el producto en productosCarrito, lo agregamos, avisando con un Toast.
@@ -73,6 +81,7 @@ function App() {
     carrito.map((singleProduct) => {
       total += singleProduct.unitPrice * singleProduct.count;
     });
+
     setTotalPrice(total);
   };
 
@@ -106,13 +115,27 @@ function App() {
   return (
     <div className="relative">
       {/*       Heder */}
-      <div className="fixed bg-teal-600 z-10 w-full top-0 shadow">
-        <Header totalPrice={totalPrice} />
+      <div className="fixed bg-teal-600 z-20 w-full top-0 shadow">
+        <Header
+          showCart={showCart}
+          setShowCart={setShowCart}
+          totalPrice={totalPrice}
+          productosCarrito={productosCarrito}
+          removeProduct={removeProduct}
+        />
       </div>
-      {/*       Toast Container */}
 
+      {/* Cart */}
+      <div>
+        <Cart
+          setShowCart={setShowCart}
+          showCart={showCart}
+          productosCarrito={productosCarrito}
+          removeProduct={removeProduct}
+        />
+      </div>
       {/*     Shop */}
-      <div className="pt-[60px] flex">
+      <div className="pt-[60px] flex justify-center">
         <div className="relative flex gap-3 py-6">
           <ProductList
             productosCarrito={productosCarrito}
@@ -121,13 +144,14 @@ function App() {
             addProduct={addProduct}
           />
         </div>
-        <div className="min-w-[400px]  lg:min-w-[500px] top-[60px] bottom-0 overflow-y-auto overflow-x-hidden fixed right-20  lg:right-14 px-3 py-6">
+        {/*         <div className="min-w-[400px]  lg:min-w-[500px] top-[60px] bottom-0 overflow-y-auto overflow-x-hidden fixed right-20  lg:right-14 px-3 py-6">
           <Cart
             productosCarrito={productosCarrito}
             removeProduct={removeProduct}
           />
-        </div>
+        </div> */}
       </div>
+      {/*       Toast Container */}
       <div>
         <ToastContainer />
       </div>
